@@ -1,0 +1,11 @@
+torch
+timm
+transformers
+albumentations
+kagglehub
+pandas
+numpy
+matplotlib
+Pillow
+scikit-learn
+tqdm
