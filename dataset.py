@@ -1,11 +1,9 @@
 import kagglehub
 path = kagglehub.dataset_download("adityajn105/flickr8k")
 
-import os
+from common_imports import *
 print(path)
 print(os.listdir(path))
-
-import pandas as pd
 images_dir = os.path.join(path, "Images")
 captions_path = os.path.join(path, "captions.txt")
 df = pd.read_csv(captions_path)
