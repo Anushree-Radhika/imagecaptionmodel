@@ -20,7 +20,6 @@ valid_tfms = A.Compose([
     ToTensorV2(),
 ])
 
-
 class Dataset:
     def __init__(self, df, tfms, dir):
         self.df = df
@@ -119,23 +118,6 @@ def get_dataloaders(batch_size=32, num_workers=2):
         persistent_workers=num_workers > 0, collate_fn=collate_fn,
     )
     return train_dl, val_dl, val_df
-
-
-def preview_samples(df, images_dir, n=20):
-    """Optional: plot a grid of sample (image, caption) pairs — for notebook/debug use."""
-    sampled_df = df.sample(n=n)
-    fig, axs = plt.subplots(n // 2, 2, figsize=(20, 3 * n))
-    for i, row in enumerate(sampled_df.iterrows()):
-        ax = axs[i // 2, i % 2]
-        image_path = os.path.join(images_dir, row[1]["image"])
-        caption = row[1]["caption"]
-        image = Image.open(image_path)
-        ax.imshow(image)
-        ax.axis("off")
-        ax.set_title(caption)
-    plt.tight_layout()
-    plt.show()
-
 
 if __name__ == "__main__":
     # Quick smoke test: python dataset.py
