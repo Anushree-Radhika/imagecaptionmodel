@@ -1,0 +1,95 @@
+import kagglehub
+path = kagglehub.dataset_download("adityajn105/flickr8k")
+
+import os
+print(path)
+print(os.listdir(path))
+
+import pandas as pd
+images_dir = os.path.join(path, "Images")
+captions_path = os.path.join(path, "captions.txt")
+df = pd.read_csv(captions_path)
+
+print(images_dir)
+print(captions_path)
+print(df.shape)
+print(df.columns.tolist())
+df.head()
+
+print("Total caption rows:", len(df))
+print("Unique images:", df['image'].nunique())
+print("Captions per image:", df.groupby('image').size().value_counts())  # should mostly show 5
+
+class Dataset:
+    def __init__(self, df, tfms, dir):
+        self.df = df
+        self.tfms = tfms
+        self.dir = dir
+    def __len__(self):
+        return len(self.df)
+    def __getitem__(self,idx):
+        sample = self.df.iloc[idx,:]
+        image = sample['image']
+        caption = sample['caption']
+        image_path = os.path.join(self.dir, image)
+        # caption_path = os.path.join(self.dir, captions.txt)
+        image = Image.open(image_path).convert('RGB')
+        image = np.array(image)
+        augs = self.tfms(image=image)
+        image = augs['image']
+        caption = f"{caption}<|endoftext|>"
+        input_ids = tokenizer(
+            caption,
+            truncation=True)['input_ids']
+        labels = input_ids.copy()
+        labels[:-1] = input_ids[1:]
+        return image,input_ids,labels
+
+sampled_df = df.sample(n=20)
+fig, axs = plt.subplots(10, 2, figsize=(20, 30))
+
+for i, row in enumerate(sampled_df.iterrows()):
+    ax = axs[i // 2, i % 2]
+    image_path = os.path.join(images_dir, row[1]['image'])
+    caption = row[1]['caption']
+    image = Image.open(image_path)
+    ax.imshow(image)
+    ax.axis('off')
+    ax.set_title(caption)
+
+plt.tight_layout()
+plt.show()
+
+train_df, val_df = train_test_split(df,test_size=0.1)
+train_df.reset_index(drop=True,inplace=True)
+
+train_ds = Dataset(train_df, train_tfms,images_dir)
+val_ds = Dataset(val_df,valid_tfms,captions_path)
+val_df.reset_index(drop=True,inplace=True)
+print(len(train_df),len(val_df))
+
+def collate_fn(batch):
+    image = [i[0] for i in batch]
+    input_ids = [i[1] for i in batch]
+    labels = [i[2] for i in batch]
+    image = torch.stack(image,dim=0)
+    input_ids = tokenizer.pad(
+        {'input_ids':input_ids},
+        padding='longest',
+        return_attention_mask=False,
+        return_tensors='pt'
+    )['input_ids']
+    labels = tokenizer.pad(
+        {'input_ids':labels},
+        padding='longest',
+        return_attention_mask=False,
+        return_tensors='pt'
+    )['input_ids']
+    mask = (input_ids!=tokenizer.pad_token_id).long()
+    labels[mask==0]=-100
+    return image, input_ids, labels
+
+dl = torch.utils.data.DataLoader(train_ds,shuffle=True,batch_size=2,collate_fn=collate_fn)
+_,c,l = next(iter(dl))
+print(c[0])
+print(l[0])
