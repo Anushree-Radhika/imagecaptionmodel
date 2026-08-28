@@ -51,7 +51,9 @@ pip install -r requirements.txt
 ```
 uppy dog running through a field . 
 ```
-##GPT-5.6 Luna
+
+
+## GPT-5.6 Luna
 ```
 A happy golden retriever runs through a sunlit meadow filled with yellow wildflowers, with green trees and a blue sky in the background.
 ```
