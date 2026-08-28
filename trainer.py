@@ -56,7 +56,7 @@ class Trainer:
         
         self.gen_tfms = A.Compose([
             A.Resize(224,224),
-            A.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5],always_apply=True),
+            A.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5]),
             ToTensorV2()
         ])
             
