@@ -42,3 +42,14 @@ Other training details:
 ```bash
 pip install -r requirements.txt
 ```
+## Result
+|Image|
+<img width="1536" height="1024" alt="gpt2image" src="https://github.com/user-attachments/assets/50b63641-a508-4f6e-9009-f8ff135169b1" />
+
+```Output Caption generated(My model)
+uppy dog running through a field . 
+```
+
+```GPT-5.6 Luna
+A happy golden retriever runs through a sunlit meadow filled with yellow wildflowers, with green trees and a blue sky in the background.
+```
