@@ -1,7 +1,5 @@
-#Here i have used modal free credits to train the model , so these syntax and more of that inspired 
-
 """
-Train VisionGPT2 using data/Images + captions.txt
+Train VisionGPT2 using data/Images + captions.csv
 Run with: modal run train.py
 """
 import modal

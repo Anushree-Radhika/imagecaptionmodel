@@ -124,9 +124,8 @@ class GPT2MLP(nn.Module):
         return x
     
 class GPT2Block(nn.Module):
-
+    
     def __init__(self,config):
-
         super().__init__()
         self.embed_dim = config.embed_dim
         self.ln_1 = nn.LayerNorm(self.embed_dim)
@@ -141,8 +140,6 @@ class GPT2Block(nn.Module):
         x = x+self.cross_attn(self.ln_2(x),enc_out,enc_out)
         x = x+self.mlp(self.ln_3(x))
         return x
-
- 
     
 class VisionGPT2Model(nn.Module):
 
