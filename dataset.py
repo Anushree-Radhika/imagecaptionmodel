@@ -1,14 +1,13 @@
 from PIL import Image
 from transformers import GPT2TokenizerFast
 import numpy as np
-import pandas as pd
+import torch
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
-from sklearn.model_selection import train_test_split
-import config
-import torch
+
 
 tokenizer = GPT2TokenizerFast.from_pretrained('gpt2')
+tokenizer.pad_token = tokenizer.eos_token  
 #-------------------------------------------
 #These are all my handwritten comments 
 #--------------------------------------------
@@ -78,11 +77,11 @@ sample_tfms = [
 train_tfms = A.Compose([
     *sample_tfms,
     A.Resize(224,224),
-    A.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5],always_apply=True),
+    A.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5]),
     ToTensorV2()
 ])
 valid_tfms = A.Compose([
     A.Resize(224,224),
-    A.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5],always_apply=True),
+    A.Normalize(mean=[0.5,0.5,0.5],std=[0.5,0.5,0.5]),
     ToTensorV2()
 ])
